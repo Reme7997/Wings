@@ -3,7 +3,7 @@ const ctx = canvas.getContext('2d');
 const tileSize = 20;
 const mazeWidth = 25;
 const mazeHeight = 25;
-let maze = Array(mazeHeight).fill(0).map(() => Array(mazeWidth).fill(1)); // 모든 셀을 벽(1)으로 시작
+let maze = Array.from({ length: mazeHeight }, () => Array(mazeWidth).fill(1)); // 모든 셀을 벽(1)으로 시작
 
 // ASCII 값을 기반으로 경로 생성
 let pathCoordinates = [];
