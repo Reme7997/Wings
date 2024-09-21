@@ -17,7 +17,8 @@ const player = {
   speedY: 0,
   gravity: 0.8,
   jumpPower: -15,
-  isJumping: false
+  isJumping: false,
+  isOnGround: true // 플레이어가 땅에 있는지 여부를 확인
 };
 
 // 목표 지점 설정
@@ -50,7 +51,10 @@ function drawPlatforms() {
 
 // 플레이어 이동 및 중력 적용
 function updatePlayer() {
-  player.speedY += player.gravity;
+  if (!player.isOnGround) {
+    player.speedY += player.gravity; // 중력 적용
+  }
+
   player.x += player.speedX;
   player.y += player.speedY;
 
@@ -66,11 +70,19 @@ function updatePlayer() {
       player.y = platform.y - player.height;
       player.speedY = 0;
       player.isJumping = false;
+      player.isOnGround = true; // 플랫폼 위에 있을 때는 땅에 있는 것으로 간주
     }
   });
 
   // 바닥에 닿으면 점프 가능하게 설정
-  if (player.y + player.height > canvas.height) {
+  if (player.y + player.height >= canvas.height) {
+    player.y = canvas.height - player.height; // 플레이어를 바닥에 고정
+    player.speedY = 0;
+    player.isOnGround = true; // 땅에 닿았을 때 상태 설정
+  }
+
+  // 플레이어가 화면 밖으로 떨어지지 않게 설정
+  if (player.y + player.height > canvas.height + 50) {
     alert("Never Give Up!"); // 실패 메시지 출력
     resetGame();
   }
@@ -95,6 +107,8 @@ function resetGame() {
   player.y = 350;
   player.speedX = 0;
   player.speedY = 0;
+  player.isJumping = false;
+  player.isOnGround = true; // 게임 초기화 시 땅에 있는 것으로 설정
 }
 
 // 키 입력 처리
@@ -105,9 +119,10 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') {
     player.speedX = 5;
   }
-  if (e.key === ' ' && !player.isJumping) {
+  if (e.key === ' ' && !player.isJumping && player.isOnGround) {
     player.speedY = player.jumpPower;
     player.isJumping = true;
+    player.isOnGround = false; // 점프할 때 땅에서 벗어남
   }
 });
 
