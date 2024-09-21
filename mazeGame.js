@@ -78,7 +78,7 @@ function handleKeyPress(e) {
   if (e.key === 'ArrowRight') newX++;
 
   // 벽 충돌 체크
-  if (maze[newY][newX] === 0) {
+  if (maze[newY] && maze[newY][newX] === 0) {
     player.x = newX;
     player.y = newY;
   }
