@@ -1,8 +1,10 @@
 const canvas = document.getElementById('mazeCanvas');
 const ctx = canvas.getContext('2d');
-const tileSize = 20;
-const mazeWidth = Math.floor(canvas.width / tileSize);  // 미로 너비 (타일 수)
-const mazeHeight = Math.floor(canvas.height / tileSize);  // 미로 높이 (타일 수)
+
+// 미로 크기와 타일 크기 조정
+const tileSize = 40;  // 타일 크기를 키워서 경로를 더 명확하게 표시
+const mazeWidth = Math.floor(canvas.width / tileSize);  // 미로 가로 칸 수
+const mazeHeight = Math.floor(canvas.height / tileSize);  // 미로 세로 칸 수
 let maze = [];
 let timeLeft = 60;
 let player = { x: 1, y: 1 };
