@@ -1,20 +1,20 @@
 const canvas = document.getElementById('mazeCanvas');
 const ctx = canvas.getContext('2d');
 
-// 미로 크기와 타일 크기 조정
+// 미로 크기와 타일 크기
 const tileSize = 40;
-const mazeWidth = Math.floor(canvas.width / tileSize);  // 미로 가로 칸 수
-const mazeHeight = Math.floor(canvas.height / tileSize);  // 미로 세로 칸 수
+const mazeWidth = 8;  // 이진수로 변환된 이름에 맞는 크기
+const mazeHeight = 8;
 let maze = [];
 let timeLeft = 60;
-let player = { x: 1, y: 1 };  // 플레이어 시작 위치
-const goal = { x: mazeWidth - 2, y: mazeHeight - 2 };  // 목표 지점
+let player = { x: 0, y: 0 };  // 플레이어 시작 위치
+const goal = { x: 7, y: 7 };  // 목표 지점
 
 const timerElement = document.getElementById('time');
 let timerInterval;
 const restartButton = document.getElementById('restartButton');
 
-// "무라타 후마" 이름을 이진수로 변환
+// "무라타 후마" 이름을 이진수로 변환하여 미로 생성
 const nameString = "Murata Fuma";
 let binaryMaze = [];
 for (let i = 0; i < nameString.length; i++) {
@@ -22,10 +22,10 @@ for (let i = 0; i < nameString.length; i++) {
   binaryMaze.push(binary.split('').map(Number));  // 각 문자를 이진수로 변환하여 배열로 저장
 }
 
-// 이진수 미로로 설정
+// 이진수 미로 설정
 function initGame() {
   maze = Array.from({ length: mazeHeight }, () => Array(mazeWidth).fill(1));  // 미로를 벽으로 채움
-  player = { x: 1, y: 1 };  // 플레이어 시작 위치
+  player = { x: 0, y: 0 };  // 플레이어 시작 위치
   timeLeft = 60;  // 타이머 초기화
   timerElement.textContent = timeLeft;
   createBinaryMaze();  // 이진수 미로 생성
@@ -36,15 +36,11 @@ function initGame() {
 
 // 이진수 미로 생성 함수
 function createBinaryMaze() {
-  const binaryHeight = binaryMaze.length;
-  const binaryWidth = binaryMaze[0].length;
-
-  for (let y = 0; y < binaryHeight; y++) {
-    for (let x = 0; x < binaryWidth; x++) {
+  for (let y = 0; y < binaryMaze.length; y++) {
+    for (let x = 0; x < binaryMaze[y].length; x++) {
       maze[y][x] = binaryMaze[y][x];  // 이진수 값으로 미로 설정 (0 = 길, 1 = 벽)
     }
   }
-
   maze[player.y][player.x] = 0;  // 시작점
   maze[goal.y][goal.x] = 0;  // 목표 지점
 }
