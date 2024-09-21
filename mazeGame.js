@@ -3,13 +3,28 @@ const ctx = canvas.getContext('2d');
 const tileSize = 20;
 const mazeWidth = 25;
 const mazeHeight = 25;
-let maze = Array.from({ length: mazeHeight }, () => Array(mazeWidth).fill(1));  
-let timeLeft = 60;  
+let maze = [];
+let timeLeft = 60;
 let player = { x: 1, y: 1 };
 const goal = { x: mazeWidth - 2, y: mazeHeight - 2 };
 
 const timerElement = document.getElementById('time');
+let timerInterval;
+const restartButton = document.getElementById('restartButton');
 
+// 게임 초기화 함수
+function initGame() {
+  maze = Array.from({ length: mazeHeight }, () => Array(mazeWidth).fill(1));  // 미로 초기화
+  player = { x: 1, y: 1 };  // 플레이어 위치 초기화
+  timeLeft = 60;  // 시간 초기화
+  timerElement.textContent = timeLeft;
+  createPath();  // 정답 경로 생성
+  generateMaze();  // 미로 확장
+  drawMaze();  // 미로 그리기
+  restartButton.style.display = 'none';  // 재시작 버튼 숨기기
+}
+
+// "Murata Fuma" 경로 생성
 const pathCoordinates = [];
 const nameString = "Murata Fuma";
 for (let i = 0; i < nameString.length; i++) {
@@ -74,13 +89,14 @@ function drawMaze() {
 }
 
 function startTimer() {
-  const timerInterval = setInterval(() => {
+  timerInterval = setInterval(() => {
     timeLeft--;
     timerElement.textContent = timeLeft;
     
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
       alert("Never Give Up!");
+      restartGame();  // 실패 시 게임 재시작
     }
   }, 1000);
 }
@@ -95,7 +111,8 @@ function movePlayer(dx, dy) {
     drawMaze();
     
     if (player.x === goal.x && player.y === goal.y) {
-      alert('85-1815');
+      clearInterval(timerInterval);  // 타이머 멈춤
+      alert('85-1815');  // 성공 메시지 (게임 재시작 없이 메시지만)
     }
   }
 }
@@ -114,8 +131,14 @@ document.getElementById('startButton').addEventListener('click', () => {
   document.getElementById('timer').style.display = 'block';
   canvas.style.display = 'block';
   
-  createPath();
-  generateMaze();
-  drawMaze();
+  initGame();
   startTimer();
 });
+
+function restartGame() {
+  restartButton.style.display = 'block';
+  restartButton.addEventListener('click', () => {
+    initGame();
+    startTimer();
+  });
+}
