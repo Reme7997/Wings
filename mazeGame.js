@@ -2,81 +2,51 @@ const canvas = document.getElementById('mazeCanvas');
 const ctx = canvas.getContext('2d');
 
 // 미로 크기와 타일 크기 조정
-const tileSize = 40;  // 타일 크기
+const tileSize = 40;
 const mazeWidth = Math.floor(canvas.width / tileSize);  // 미로 가로 칸 수
 const mazeHeight = Math.floor(canvas.height / tileSize);  // 미로 세로 칸 수
 let maze = [];
 let timeLeft = 60;
-let player = { x: 1, y: 1 };
-const goal = { x: mazeWidth - 2, y: mazeHeight - 2 };
+let player = { x: 1, y: 1 };  // 플레이어 시작 위치
+const goal = { x: mazeWidth - 2, y: mazeHeight - 2 };  // 목표 지점
 
 const timerElement = document.getElementById('time');
 let timerInterval;
 const restartButton = document.getElementById('restartButton');
 
-// "무라타 후마" 이름을 이용한 미로 경로 생성
-const pathCoordinates = [];
+// "무라타 후마" 이름을 이진수로 변환
 const nameString = "Murata Fuma";
+let binaryMaze = [];
 for (let i = 0; i < nameString.length; i++) {
-  let asciiValue = nameString.charCodeAt(i);
-  let x = (asciiValue % mazeWidth);
-  let y = Math.floor(asciiValue % mazeHeight);
-  pathCoordinates.push([x, y]);
+  let binary = nameString.charCodeAt(i).toString(2).padStart(8, '0');
+  binaryMaze.push(binary.split('').map(Number));  // 각 문자를 이진수로 변환하여 배열로 저장
 }
 
-// 게임 초기화 함수
+// 이진수 미로로 설정
 function initGame() {
   maze = Array.from({ length: mazeHeight }, () => Array(mazeWidth).fill(1));  // 미로를 벽으로 채움
   player = { x: 1, y: 1 };  // 플레이어 시작 위치
   timeLeft = 60;  // 타이머 초기화
   timerElement.textContent = timeLeft;
-  createPath();  // 경로 생성
-  generateMaze();  // 미로를 생성
+  createBinaryMaze();  // 이진수 미로 생성
   drawMaze();  // 미로 그리기
   restartButton.style.display = 'none';  // 재시작 버튼 숨기기
   clearInterval(timerInterval);  // 기존 타이머 중지
 }
 
-// 경로 생성 함수 (무라타 후마 이름의 ASCII 값을 기반으로 단순 경로 생성)
-function createPath() {
-  for (let i = 0; i < pathCoordinates.length; i++) {
-    let [x, y] = pathCoordinates[i];
-    maze[y][x] = 0;  // 길 생성
-    if (i > 0) {
-      let [prevX, prevY] = pathCoordinates[i - 1];
-      maze[Math.floor((y + prevY) / 2)][Math.floor((x + prevX) / 2)] = 0;  // 경로 연결
+// 이진수 미로 생성 함수
+function createBinaryMaze() {
+  const binaryHeight = binaryMaze.length;
+  const binaryWidth = binaryMaze[0].length;
+
+  for (let y = 0; y < binaryHeight; y++) {
+    for (let x = 0; x < binaryWidth; x++) {
+      maze[y][x] = binaryMaze[y][x];  // 이진수 값으로 미로 설정 (0 = 길, 1 = 벽)
     }
   }
+
   maze[player.y][player.x] = 0;  // 시작점
   maze[goal.y][goal.x] = 0;  // 목표 지점
-}
-
-// 미로 생성 함수 (벽을 생성하되, 단순하게)
-function generateMaze() {
-  let walls = [];
-  maze[1][1] = 0;  // 시작점
-  walls.push([1, 1, 'N']);
-  
-  while (walls.length > 0) {
-    let randomWall = walls.splice(Math.floor(Math.random() * walls.length), 1)[0];
-    let [x, y, direction] = randomWall;
-    let nextX = x, nextY = y;
-    
-    if (direction === 'N') nextY -= 2;
-    if (direction === 'S') nextY += 2;
-    if (direction === 'E') nextX += 2;
-    if (direction === 'W') nextX -= 2;
-    
-    if (nextX > 0 && nextY > 0 && nextX < mazeWidth - 1 && nextY < mazeHeight - 1 && maze[nextY][nextX] === 1) {
-      maze[nextY][nextX] = 0;
-      maze[(y + nextY) / 2][(x + nextX) / 2] = 0;  // 길 생성
-      
-      if (nextY - 2 > 0) walls.push([nextX, nextY, 'N']);
-      if (nextY + 2 < mazeHeight) walls.push([nextX, nextY, 'S']);
-      if (nextX - 2 > 0) walls.push([nextX, nextY, 'W']);
-      if (nextX + 2 < mazeWidth) walls.push([nextX, nextY, 'E']);
-    }
-  }
 }
 
 // 미로 그리기 함수
