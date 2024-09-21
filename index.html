@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maze Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    canvas {
+      border: 2px solid #000;
+      background-color: lightgray;
+    }
+    #controls {
+      margin-top: 10px;
+    }
+    .button {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      background-color: lightblue;
+      text-align: center;
+      line-height: 50px;
+      font-size: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to the Maze Game</h1>
+  <p>Use arrow keys or touch controls to move through the maze!</p>
+  <canvas id="mazeCanvas" width="400" height="400"></canvas>
+  
+  <div id="controls">
+    <div class="button" id="left">←</div>
+    <div class="button" id="up">↑</div>
+    <div class="button" id="down">↓</div>
+    <div class="button" id="right">→</div>
+  </div>
+  
+  <script src="mazeGame.js"></script>
+</body>
+</html>
