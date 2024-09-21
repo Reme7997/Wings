@@ -61,9 +61,10 @@ function drawMaze() {
   }
 }
 
+// 이벤트 리스너로 타이틀 숨기고 게임 시작
 document.getElementById('startButton').addEventListener('click', () => {
   document.getElementById('titleScreen').style.display = 'none';
-  canvas.style.display = 'block';
+  canvas.style.display = 'block';  // canvas가 제대로 표시되도록 block 설정
   createPath();
   generateMaze();
   drawMaze();
