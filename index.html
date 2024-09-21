@@ -4,23 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Find Your Way</title>
+  <style>
+    #log {
+      white-space: pre-wrap;  /* 줄바꿈을 지원해서 여러 줄의 로그를 표시 */
+    }
+  </style>
 </head>
 <body>
-  <h1>미로 게임 테스트</h1>
+  <h1>미로 게임 테스트 페이지</h1>
   <button id="startButton">Start Game</button>
 
   <!-- 로그를 표시할 영역 -->
   <div id="log"></div>
   
   <script>
-    // 로그를 화면에 표시하는 함수
+    // 로그를 화면에 유지시키는 함수 (기존 메시지를 덮어쓰지 않음)
     function displayLog(message) {
-      document.getElementById('log').innerText += message + '\n';
+      const logDiv = document.getElementById('log');
+      logDiv.innerText += message + '\n';  // 로그를 덧붙여서 출력
     }
     
     displayLog("index.html 파일이 로드되었습니다.");
   </script>
-  
+
   <!-- JavaScript 파일 불러오기 -->
   <script src="/REPOSITORY_NAME/mazeGame.js"></script>
 </body>
