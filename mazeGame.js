@@ -1,29 +1,58 @@
-document.getElementById('startButton').addEventListener('click', () => {
-  document.getElementById('titleScreen').style.display = 'none';  // 시작 화면 숨김
-  document.getElementById('timer').style.display = 'block';       // 타이머 표시
-  canvas.style.display = 'block';                                 // 캔버스 표시
+const canvas = document.getElementById("mazeCanvas");
+const ctx = canvas.getContext("2d");
 
-  initGame();  // 게임 초기화
-  startTimer();  // 타이머 시작
+const tileSize = 40;
+const maze = [
+  [1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 1],
+  [1, 0, 1, 0, 1],
+  [1, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1],
+];
 
-  console.log("게임이 시작되었습니다.");  // 확인용 로그
-});
+const player = {
+  x: 1,
+  y: 1
+};
 
-// 미로 그리기 함수 확인
+canvas.width = tileSize * maze[0].length;
+canvas.height = tileSize * maze.length;
+
 function drawMaze() {
-  console.log("drawMaze() 호출됨");  // 확인용 로그
-  ctx.clearRect(0, 0, canvas.width, canvas.height);  // 캔버스 초기화
-  for (let y = 0; y < mazeHeight; y++) {
-    for (let x = 0; x < mazeWidth; x++) {
-      ctx.fillStyle = maze[y][x] === 1 ? 'black' : 'white';  // 벽과 길 구분
+  for (let y = 0; y < maze.length; y++) {
+    for (let x = 0; x < maze[0].length; x++) {
+      if (maze[y][x] === 1) {
+        ctx.fillStyle = "black";
+      } else {
+        ctx.fillStyle = "white";
+      }
       ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
     }
   }
-  // 플레이어 그리기
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(player.x * tileSize, player.y * tileSize, tileSize, tileSize);  
-
-  // 목표 지점 그리기
-  ctx.fillStyle = 'green';
-  ctx.fillRect(goal.x * tileSize, goal.y * tileSize, tileSize, tileSize);
 }
+
+function drawPlayer() {
+  ctx.fillStyle = "red";
+  ctx.fillRect(player.x * tileSize, player.y * tileSize, tileSize, tileSize);
+}
+
+function movePlayer(dx, dy) {
+  const newX = player.x + dx;
+  const newY = player.y + dy;
+  if (maze[newY][newX] === 0) {
+    player.x = newX;
+    player.y = newY;
+  }
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowUp") movePlayer(0, -1);
+  if (e.key === "ArrowDown") movePlayer(0, 1);
+  if (e.key === "ArrowLeft") movePlayer(-1, 0);
+  if (e.key === "ArrowRight") movePlayer(1, 0);
+  drawMaze();
+  drawPlayer();
+});
+
+drawMaze();
+drawPlayer();
