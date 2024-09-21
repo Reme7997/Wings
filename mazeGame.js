@@ -1,12 +1,12 @@
 const canvas = document.getElementById('mazeCanvas');
 const ctx = canvas.getContext('2d');
-const tileSize = 20;
-const mazeWidth = 25;
-const mazeHeight = 25;
-let maze = Array.from({ length: mazeHeight }, () => Array(mazeWidth).fill(1)); // 모든 셀을 벽(1)으로 시작
+const tileSize = 20;  // 타일 하나의 크기
+const mazeWidth = 25;  // 미로의 너비
+const mazeHeight = 25;  // 미로의 높이
+let maze = Array.from({ length: mazeHeight }, () => Array(mazeWidth).fill(1));  // 모든 셀을 벽(1)으로 초기화
 
-// ASCII 값을 기반으로 경로 생성
-let pathCoordinates = [];
+// "Murata Fuma"의 ASCII 값을 기반으로 경로 설정
+const pathCoordinates = [];
 const nameString = "Murata Fuma";
 for (let i = 0; i < nameString.length; i++) {
   let asciiValue = nameString.charCodeAt(i);
@@ -15,19 +15,19 @@ for (let i = 0; i < nameString.length; i++) {
   pathCoordinates.push([x, y]);
 }
 
-// 경로 생성
+// 미로의 경로를 설정하는 함수
 function createPath() {
   for (let i = 0; i < pathCoordinates.length; i++) {
     let [x, y] = pathCoordinates[i];
-    maze[y][x] = 0;  // 길을 생성 (0은 길)
+    maze[y][x] = 0;  // 0은 길
     if (i > 0) {
       let [prevX, prevY] = pathCoordinates[i - 1];
-      maze[(y + prevY) / 2][(x + prevX) / 2] = 0; // 경로 연결
+      maze[Math.floor((y + prevY) / 2)][Math.floor((x + prevX) / 2)] = 0;  // 경로를 연결
     }
   }
 }
 
-// Prim's 알고리즘으로 미로 생성
+// Prim's 알고리즘을 사용하여 미로를 확장
 function generateMaze() {
   let walls = [];
   maze[1][1] = 0;
@@ -55,22 +55,23 @@ function generateMaze() {
   }
 }
 
-// 미로 그리기
+// 미로를 캔버스에 그리는 함수
 function drawMaze() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);  // 기존 내용을 지움
   for (let y = 0; y < mazeHeight; y++) {
     for (let x = 0; x < mazeWidth; x++) {
-      ctx.fillStyle = maze[y][x] === 1 ? 'black' : 'white';
+      ctx.fillStyle = maze[y][x] === 1 ? 'black' : 'white';  // 벽은 검정, 길은 흰색
       ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
     }
   }
 }
 
-// 스타트 버튼 클릭 시 실행
+// 스타트 버튼 클릭 시 미로 생성 및 그리기 시작
 document.getElementById('startButton').addEventListener('click', () => {
-  document.getElementById('titleScreen').style.display = 'none';
-  canvas.style.display = 'block';
+  document.getElementById('titleScreen').style.display = 'none';  // 타이틀 화면 숨김
+  canvas.style.display = 'block';  // 캔버스 표시
   
-  createPath();  // 경로 생성
-  generateMaze();  // 미로 생성
+  createPath();  // 정답 경로 생성
+  generateMaze();  // 미로 확장
   drawMaze();  // 미로 그리기
 });
