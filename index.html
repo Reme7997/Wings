@@ -3,13 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>미로 게임 테스트</title>
+  <title>Find Your Way</title>
 </head>
 <body>
-  <h1>미로 게임 테스트 페이지</h1>
+  <h1>미로 게임 테스트</h1>
   <button id="startButton">Start Game</button>
+
+  <!-- 로그를 표시할 영역 -->
+  <div id="log"></div>
   
-  <!-- JavaScript 파일 로드 -->
+  <script>
+    // 로그를 화면에 표시하는 함수
+    function displayLog(message) {
+      document.getElementById('log').innerText += message + '\n';
+    }
+    
+    displayLog("index.html 파일이 로드되었습니다.");
+  </script>
+  
+  <!-- JavaScript 파일 불러오기 -->
   <script src="/REPOSITORY_NAME/mazeGame.js"></script>
 </body>
 </html>
