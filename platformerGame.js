@@ -82,8 +82,8 @@ function updatePlayer() {
     player.isOnGround = true; // 땅에 닿았을 때 상태 설정
   }
 
-  // 플레이어가 화면 밖으로 떨어지지 않게 설정
-  if (player.y + player.height > canvas.height + 50) {
+  // 플레이어가 화면 아래로 떨어졌을 때 실패 메시지 출력
+  if (player.y > canvas.height) {
     alert("Never Give Up!"); // 실패 메시지 출력
     resetGame();
   }
