@@ -3,8 +3,9 @@ const ctx = canvas.getContext('2d');
 const tileSize = 20;
 const mazeWidth = 25;
 const mazeHeight = 25;
-let maze = Array(mazeHeight).fill(0).map(() => Array(mazeWidth).fill(1));
+let maze = Array(mazeHeight).fill(0).map(() => Array(mazeWidth).fill(1)); // 모든 셀을 벽(1)으로 시작
 
+// ASCII 값을 기반으로 경로 생성
 let pathCoordinates = [];
 const nameString = "Murata Fuma";
 for (let i = 0; i < nameString.length; i++) {
@@ -14,17 +15,19 @@ for (let i = 0; i < nameString.length; i++) {
   pathCoordinates.push([x, y]);
 }
 
+// 경로 생성
 function createPath() {
   for (let i = 0; i < pathCoordinates.length; i++) {
     let [x, y] = pathCoordinates[i];
-    maze[y][x] = 0;
+    maze[y][x] = 0;  // 길을 생성 (0은 길)
     if (i > 0) {
       let [prevX, prevY] = pathCoordinates[i - 1];
-      maze[(y + prevY) / 2][(x + prevX) / 2] = 0;
+      maze[(y + prevY) / 2][(x + prevX) / 2] = 0; // 경로 연결
     }
   }
 }
 
+// Prim's 알고리즘으로 미로 생성
 function generateMaze() {
   let walls = [];
   maze[1][1] = 0;
@@ -52,6 +55,7 @@ function generateMaze() {
   }
 }
 
+// 미로 그리기
 function drawMaze() {
   for (let y = 0; y < mazeHeight; y++) {
     for (let x = 0; x < mazeWidth; x++) {
@@ -61,11 +65,12 @@ function drawMaze() {
   }
 }
 
-// 이벤트 리스너로 타이틀 숨기고 게임 시작
+// 스타트 버튼 클릭 시 실행
 document.getElementById('startButton').addEventListener('click', () => {
   document.getElementById('titleScreen').style.display = 'none';
-  canvas.style.display = 'block';  // canvas가 제대로 표시되도록 block 설정
-  createPath();
-  generateMaze();
-  drawMaze();
+  canvas.style.display = 'block';
+  
+  createPath();  // 경로 생성
+  generateMaze();  // 미로 생성
+  drawMaze();  // 미로 그리기
 });
